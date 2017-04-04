@@ -5,12 +5,13 @@
 'use strict';
 
 var socket_register, socket_play,myId,oppositionName;
-var namePlayer = $('#namePlayer'), nameSubmit = $('#nameSubmit');
+var namePlayer,nameSubmit;
 
 $(document).ready(function () {
 
     /* var socket = new WebSocket('ws://192.168.43.187:8080'); */
-
+    namePlayer = $('#namePlayer');
+    nameSubmit = $('#nameSubmit');
     nameSubmit.on('click', function () {
 
         socket_register = new WebSocket('ws://192.168.43.187:8080/register');
