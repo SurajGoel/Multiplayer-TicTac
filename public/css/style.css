@@ -1,0 +1,89 @@
+body {}
+
+#container {
+    width: 650px;
+    text-align: center;
+    margin: auto;
+    margin-top: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: gray;
+    font-size: 20px;
+    -webkit-font-smoothing: antialiased;
+}
+
+#container #logo {
+    font-family: 'Lobster', cursive;
+    color: rgb(255, 110, 110);
+    font-size: 55px;
+}
+
+#container #nameText {
+    text-align: center;
+}
+
+#container #gameMode {
+    font-size: 30px;
+}
+
+#container #menu {
+    line-height: 1.3em;
+    text-transform: uppercase;
+    font-size: 35px;
+    font-weight: bold;
+    color: rgb(255, 110, 110);
+}
+
+#container #menu a,
+#container #exitButton {
+    font-size: 25px;
+    text-decoration: none;
+    color: rgb(255, 110, 110);
+}
+
+#container #menu a:hover {
+    -webkit-transition: all 0.5s;
+    color: rgb(255, 65, 65);
+}
+
+#container #messageStack {
+    display: none;
+    color: crimson;
+}
+
+#container #onlinePlayers {
+    display: none;
+}
+
+#container #self-name {
+    text-align: left;
+}
+
+#container #opposition-name {
+    text-align: right;
+}
+
+#container #exitButton {
+    display: none;
+}
+
+table {
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    border-collapse: collapse;
+    margin: 25px auto;
+    background: white;
+    -moz-box-shadow: 0px 1px 40px 5px #ccc;
+    -webkit-box-shadow: 0px 1px 40px 5px #ccc;
+    box-shadow: 0px 1px 40px 5px #ccc;
+    display: none;
+}
+
+table tr td {
+    border: 2px rgb(190, 198, 255) solid;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    font-size: 60px;
+    cursor: pointer;
+}

@@ -1,31 +1,82 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <title>
+        <html lang="en">
 
-    <script
-            src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
-    <script type="text/javascript" src="./funct.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <head>
+            <meta charset="utf-8">
+            <title>Tic Tac Toe</title>
+            <link href="css/style.css" media="screen" rel="stylesheet" type="text/css">
+            <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script type="text/javascript" src="javascripts/socket.io.js"></script>
+            <script src="javascripts/game.js"></script>
+        </head>
 
-    <title>Welcome TO TICTACTOE!</title>
+        <body>
+
+            <div id="container">
+
+                <div id="logo">Tic Tac Toe</div>
+                <hr />
+
+                <input typ e="text" name="play" placeholder="Enter name for Online" id="nameText" />
+                <p id="messageStack"><b>Please Input valid name for Online Play.</b>
+
+                    <p id="gameMode">Choose Your Game Mode</p>
+
+                    <div id="menu">
+                        <a id="singlePlayer" href="#">Single Player</a> <br />
+                        <a id="twoPlayers" href="#">Two Players</a> <br />
+                        <a id="online" href="#">Online</a> <br />
+                    </div>
+
+                    <hr />
+
+                    <table id="tictactoe-board">
+                        <tr>
+                            <td id="grid-0" class=""></td>
+                            <td id="grid-1" class=""></td>
+                            <td id="grid-2" class=""></td>
+                        </tr>
+                        <tr>
+                            <td id="grid-3" class=""></td>
+                            <td id="grid-4" class=""></td>
+                            <td id="grid-5" class=""></td>
+                        </tr>
+                        <tr>
+                            <td id="grid-6" class=""></td>
+                            <td id="grid-7" class=""></td>
+                            <td id="grid-8" class=""></td>
+                        </tr>
+                    </table>
+
+                    <div id="onlinePlayers">
+                        <p id="self-name">You: </p>
+                        <p id="opposition-name">Opponent: </p>
+                    </div>
+
+                    <div id="notification">
+                        <p>Click on <b>Single Player above</b> to initiate game vs computer.</p>
+                        <p>While clicking on <b>Two Player</b> will initiate game with another human player (turn by turn).</p>
+                        <p><b>Online</b> Would Initiate an online Game Session.</p>
+                        <p><b>Reset</b> button will clean up the grid and restart the game.</p>
+                    </div>
+
+                    <a href="#" id="exitButton">Exit This Game</a>
+                    <p>
+            </div>
+
+        </body>
+
+        </html>
+    </title>
 </head>
 
 <body>
-    <div class="container">
-        <h1 class="text-center">Let's Play The Game !</h1>
-    </div>
-    <div class="container">
-        <h4 class="text-center" id="sub-head">Submit your name And Play the game</h4>
-        <input class="align-center" type="text" placeholder="Name!" id="namePlayer">
-        <input type="submit" id="nameSubmit">
-    </div>
-
-    <p id="textincoming"></p>
 
 </body>
 
