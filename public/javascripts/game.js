@@ -13,6 +13,100 @@ $(document).ready(function() {
         var firstPlayer = null;
 
         socket.on('register', function(data) {
+            initiateGame(data);
+        });
+
+        socket.on('play', function(data) {
+            data = JSON.parse(data);
+            console.log('On play');
+            console.log(data);
+            ticTac.selectCell($('#' + data.gridPosition));
+            $('#self-name').css('font-weight', 'bold');
+            $('#opposition-name').css('font-weight', '');
+            ticTac.setCurrentPlayer(myMarker);
+            $('#tictactoe-board td').click(onClick);
+        });
+
+        socket.on('close', function(data) {
+            ticTac.resetGame();
+            console.log('atleast PInging here !!');
+            $('#messageStack').text("Your online Opposition left the game");
+            $('#messageStack').show();
+            $('#onlinePlayers').hide();
+            $('#tictactoe-board').hide();
+            delete this;
+        });
+
+        socket.on('win', function(data) {
+            $('#tictactoe-board td').unbind('click');
+            data = JSON.parse(data);
+            console.log("I lost !!!!!!!!");
+            console.log(data.gridPosition);
+            ticTac.selectCell($('#' + data.gridPosition));
+            socket.emit('reset');
+            alert('You Loose');
+            ticTac.resetGame();
+        });
+
+        socket.on('draw', function(data) {
+            $('#tictactoe-board td').unbind('click');
+            data = JSON.parse(data);
+            console.log("Drawww");
+            console.log(data);
+            ticTac.selectCell($('#' + data.gridPosition));
+            socket.emit('reset');
+            alert('It\'s A Draw');
+            ticTac.resetGame();
+        });
+
+        socket.on('reset', function(data) {
+            initiateGame(data);
+        });
+
+        this.playNext = function(gridPosition) {
+            ticTac.setCurrentPlayer(oppositionMarker);
+            $('#self-name').css('font-weight', '');
+            $('#opposition-name').css('font-weight', 'bold');
+            $('#tictactoe-board td').unbind('click');
+            socket.emit('play', JSON.stringify({
+                clientId: myId,
+                data: gridPosition
+            }))
+        };
+
+        this.sendWin = function(gridPosition) {
+            $('#tictactoe-board td').unbind('click');
+            ticTac.selectCell($('#' + gridPosition));
+            console.log('I have won');
+            console.log(gridPosition);
+            socket.emit('win', JSON.stringify({
+                clientId: myId,
+                data: gridPosition
+            }));
+            alert('You Won !!!');
+        };
+
+        this.sendDraw = function(gridPosition) {
+            ticTac.selectCell($('#' + gridPosition));
+            socket.emit('draw', JSON.stringify({
+                clientId: myId,
+                data: gridPosition
+            }));
+            alert('It\'s a Draw');
+        }
+
+        this.register = function(name) {
+            $('#tictactoe-board').unbind('click');
+            socket.emit('register', JSON.stringify({
+                name: name
+            }))
+        };
+
+        this.getOppositionName = function() {
+            return oppositionName;
+        }
+
+        function initiateGame(data) {
             console.log('On Register ');
             console.log(data);
             data = JSON.parse(data);
@@ -25,7 +119,7 @@ $(document).ready(function() {
             $('#opposition-name').text('Opponent: ' + oppositionName + ' (' +
                 oppositionMarker + ')');
             $('#onlinePlayers').show();
-            if (firstPlayer) {
+            if (firstPlayer === 'true') {
                 ticTac.setCurrentPlayer(myMarker);
                 $('#self-name').css('font-weight', 'bold');
                 $('#opposition-name').css('font-weight', '');
@@ -33,61 +127,10 @@ $(document).ready(function() {
             }
             else {
                 ticTac.setCurrentPlayer(oppositionMarker);
+                $('#tictactoe-board td').unbind('click');
                 $('#self-name').css('font-weight', '');
                 $('#opposition-name').css('font-weight', 'bold');
             }
-        });
-
-        socket.on('play', function(data) {
-            ticTac.setCurrentPlayer(myMarker);
-            data = JSON.parse(data);
-            console.log('On play');
-            console.log(data);
-            ticTac.selectCell(data.gridPosition);
-            $('#tictactoe-board td').click(onClick);
-        });
-
-        socket.on('close', function(data) {
-            ticTac.resetGame();
-            $('#messageStack').text("Your online Opposition left the game");
-            $('#tictactoe-board').hide();
-            delete this;
-        });
-
-        socket.on('win', function(data) {
-            data = JSON.parse(data);
-            ticTac.selectCell(data.gridPosition);
-            alert('You Loose');
-            ticTac.resetGame();
-        });
-
-        this.playNext = function(gridPosition) {
-            ticTac.setCurrentPlayer(oppositionMarker);
-            $('#self-name').css('font-weight', '');
-            $('#opposition-name').css('font-weight', 'bold');
-            socket.emit('play', JSON.stringify({
-                clientId: myId,
-                data: gridPosition
-            }))
-        };
-
-        this.sendWin = function(gridPosition) {
-            alert('You Won !!!');
-            socket.emit('win', JSON.stringify({
-                clientId: myId,
-                data: gridPosition
-            }))
-        };
-
-        this.register = function(name) {
-            $('#tictactoe-board').unbind('click');
-            socket.emit('register', JSON.stringify({
-                name: name
-            }))
-        };
-
-        this.getOppositionName = function() {
-            return oppositionName;
         }
     };
 
@@ -179,15 +222,29 @@ $(document).ready(function() {
                 console.log("Adding Class");
                 $(cell).addClass('selectedBy' + currentPlayer);
                 $(cell).html(currentPlayer);
-                this.lastSelected = cell;
+                this.lastSelected = cell.attr('id');
                 return true;
             }
         };
 
         this.winHandler = function(winner) {
             if (gameMode === 'singlePlayer' || gameMode === 'twoPlayers') return offlineWinHandler(winner);
-            else onlineWinHandler();
+            else return onlineWinHandler();
         };
+
+        this.drawHandler = function() {
+            console.log('Draw hogo bhaiooooo');
+            if (gameMode !== 'online') return offlineDrawHandler();
+            else return onlineDrawHandler();
+        }
+
+        function offlineDrawHandler() {
+            alert("It's a Draw Match");
+        }
+
+        function onlineDrawHandler() {
+            onlineHandler.sendDraw(this.lastSelected);
+        }
 
         function offlineWinHandler(winner) {
             alert('Player : ' + winner + ' Won !!');
@@ -258,8 +315,10 @@ $(document).ready(function() {
         };
 
         this.setOnline = function() {
-            onlineHandler = new onlinePlayHandler();
-            onlineHandler.register($('#nameText').val());
+            if (onlineHandler === null) {
+                onlineHandler = new onlinePlayHandler();
+                onlineHandler.register($('#nameText').val());
+            }
         };
 
         this.resetGame = function() {
@@ -300,7 +359,7 @@ $(document).ready(function() {
             ticTac.nextMove();
             return;
         }
-        else if (result === 'draw') alert('Game Drawn');
+        else if (result === 'draw') ticTac.drawHandler();
         else ticTac.winHandler(result);
         ticTac.resetGame();
     }
@@ -336,15 +395,7 @@ $(document).ready(function() {
     });
 
     $('#exitButton').click(function(e) {
-        delete ticTac;
-        $('#gameMode').text('Choose Your Game Mode');
-        $('#menu').show();
-        $('#notification').show();
-        $('#tictactoe-board').hide();
-        $('#exitButton').hide();
-        $('#messageStack').hide();
-        $('#nameText').show();
-        $('#onlinePlayers').hide();
+        window.location.reload();
     });
 
     function onClick(e) {

@@ -93,6 +93,24 @@ io.on('connection', function(socket) {
             gridPosition: gridPosition
         }));
     });
+
+    socket.on('draw', function(data) {
+        data = JSON.parse(data);
+        console.log('Drawwwww !!!!');
+        var clientId = data.clientId;
+        var gridPosition = data.data;
+        var receiver = paired[clientId];
+        console.log("Data sending + ", data);
+        clients[receiver].conn.emit('draw', JSON.stringify({
+            gridPosition: gridPosition
+        }));
+    })
+
+    socket.on('reset', function(data) {
+        var client1 = sock2client.get(socket);
+        var client2 = paired[client1];
+        sendRegistration(client1, client2);
+    });
 });
 
 server.listen(8080, function(err) {
@@ -117,20 +135,7 @@ function connectclients() {
         paired[client2] = client1;
         console.log("ON CONNECT Paired obj after : ");
         console.log(paired);
-        clients[client1].conn.emit('register', JSON.stringify({
-            clientId: client1,
-            oppositionName: clients[client2].name,
-            firstPlayer: 'true',
-            myMarker: 'X',
-            oppositionMarker: 'O'
-        }));
-        clients[client2].conn.emit('register', JSON.stringify({
-            clientId: client2,
-            oppositionName: clients[client1].name,
-            firstPlayer: 'false',
-            myMarker: 'O',
-            oppositionMarker: 'X'
-        }));
+        sendRegistration(client1, client2);
     }
 }
 
@@ -144,4 +149,21 @@ function getFromSet() {
         if (count == 2) break;
     }
     return arrayClients;
+}
+
+function sendRegistration(client1, client2) {
+    clients[client1].conn.emit('register', JSON.stringify({
+        clientId: client1,
+        oppositionName: clients[client2].name,
+        firstPlayer: 'true',
+        myMarker: 'X',
+        oppositionMarker: 'O'
+    }));
+    clients[client2].conn.emit('register', JSON.stringify({
+        clientId: client2,
+        oppositionName: clients[client1].name,
+        firstPlayer: 'false',
+        myMarker: 'O',
+        oppositionMarker: 'X'
+    }));
 }
