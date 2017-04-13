@@ -5,7 +5,7 @@ $(document).ready(function() {
      */
     var onlinePlayHandler = function() {
         console.log("Socket lIVEEEE");
-        var socket = io.connect('wss://open-source-sgoel01.c9users.io');
+        var socket = io.connect('wss://secure-reef-17167.herokuapp.com/');
         var myId = null;
         var oppositionName = null;
         var myMarker = null;
