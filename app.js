@@ -113,7 +113,7 @@ io.on('connection', function(socket) {
     });
 });
 
-server.listen(8080, function(err) {
+server.listen(process.env.PORT, function(err) {
     console.log("Listening...");
 });
 
