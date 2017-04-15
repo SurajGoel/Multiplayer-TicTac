@@ -11,3 +11,6 @@ I wrote a backend in nodejs. It's far from the most efficient way, but it is wor
 ``npm init``
 
 Change the url for socket connection in ``game.js`` file pointing to your backend.
+
+
+There is a live version running at https://secure-reef-17167.herokuapp.com/
